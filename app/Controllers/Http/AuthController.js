@@ -17,9 +17,10 @@ class AuthController {
 
   async login({request, auth}) {
     const {email, password} = request.all()
-    const token = auth.attempt(email, password)
-
-    return token
+    const token = await auth.attempt(email, password)
+    const user = await User.query().where('email', email).first()
+    user.token = token
+    return user
   }
 }
 
