@@ -18,6 +18,8 @@ const Route = use("Route");
 
 Route.get("/users", "UserController.all").middleware("auth");
 
+Route.get("/weather", "WeatherController.getWeather");
+
 Route.post("/register", "AuthController.register");
 Route.post("/login", "AuthController.login");
 Route.post("/social-login", "AuthController.socialLogin");
