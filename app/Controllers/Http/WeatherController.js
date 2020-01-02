@@ -3,11 +3,22 @@
 const fetch = require("node-fetch");
 
 class WeatherController {
-  async getWeather({ response }) {
-    const query = response.get();
-    const url = `http://api.openweathermap.org/data/2.5/forecast?zip=${query.zip}&id=56d5bb6657707845fbe02c5bea0e7b83`;
+  async getWeather({ request }) {
+    const query = request.get();
+
+    const region = query.region || "Rio de Janeiro";
+
+    const url = `http://api.openweathermap.org/data/2.5/forecast?q=${region}&appid=56d5bb6657707845fbe02c5bea0e7b83`;
+
     const response = await fetch(url).then(res => res.json());
-    return response;
+    const list = response.list.splice(0, 3);
+    const listMap = list.map((item, index) => ({
+      temp: item.main.temp,
+      tempMin: item.main.temp_min,
+      tempMax: item.main.temp_max,
+      weather: item.weather.pop().main.toLowerCase()
+    }));
+    return listMap;
   }
 }
 
