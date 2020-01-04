@@ -8,7 +8,7 @@ class WeatherController {
 
     const region = query.region || "Rio de Janeiro";
 
-    const url = `http://api.openweathermap.org/data/2.5/forecast?q=${region}&appid=56d5bb6657707845fbe02c5bea0e7b83`;
+    const url = `http://api.openweathermap.org/data/2.5/forecast?q=${region}&appid=56d5bb6657707845fbe02c5bea0e7b83&units=metric`;
 
     const response = await fetch(url).then(res => res.json());
     const list = response.list.splice(0, 3);
