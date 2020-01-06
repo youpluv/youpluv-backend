@@ -23,3 +23,8 @@ Route.get("/weather", "WeatherController.getWeather");
 Route.post("/register", "AuthController.register");
 Route.post("/login", "AuthController.login");
 Route.post("/social-login", "AuthController.socialLogin");
+//Testando rotas acl...
+Route.get("/acl" , () => {
+  console.log('Eu sou usuario admin')
+  return "sou admin"
+} ).middleware(['auth:jwt', 'is:administrador'])
