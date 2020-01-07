@@ -48,9 +48,8 @@ class AuthController {
     }
   }
   //Admin user register only
-  async adminRegister({ request, auth }) {
+  async registerAdmin({ request, auth }) {
     const roleMobile = await Role.find(1);
-
     const data = request.only(["email", "password", "username"]);
 
     const { email, password } = data;
@@ -65,6 +64,41 @@ class AuthController {
 
     return user;
   }
+
+
+  async changeRole({ request, response }) {
+    const { user: userId, role: roleId } = request.body
+    let user = {}
+    let role = {}
+    try {
+      user = await User.find(userId)
+      if (!user) {
+        return response.status(404).json({ error: "User not found" })
+      }
+
+    } catch (e) {
+      return response.status(500).json({ error: "error when getting user..." })
+    }
+
+    try {
+      role = await Role.find(roleId)
+      if (!role) {
+        return response.status(404).json({ error: "Role not found" })
+      }
+
+    } catch (e) {
+      return response.status(500).json({ error: "error when getting Role..." })
+    }
+
+    const rolesToRemove = await user.getRoles();
+    await user.roles().detach();
+    await user.roles().attach([role.id]);
+
+    return response.status(200).json({user:user , role: await user.getRoles()})
+
+
+  }
 }
+
 
 module.exports = AuthController;

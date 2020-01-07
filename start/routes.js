@@ -21,10 +21,15 @@ Route.get("/users", "UserController.all").middleware("auth");
 Route.get("/weather", "WeatherController.getWeather");
 
 Route.post("/register", "AuthController.register");
+Route.post("/register-admin", "AuthController.registerAdmin");
+
 Route.post("/login", "AuthController.login");
 Route.post("/social-login", "AuthController.socialLogin");
-//Testando rotas acl...
-Route.get("/acl" , () => {
+
+Route.get("/acl" , ({request , result }) => {
   console.log('Eu sou usuario admin')
-  return "sou admin"
-} ).middleware(['auth:jwt', 'is:administrador'])
+  return "ok"
+} ).middleware(['auth:jwt', 'is:administrator'])
+
+
+Route.put("/change-role" , "AuthController.changeRole").middleware(['auth:jwt', 'is:administrator'])
