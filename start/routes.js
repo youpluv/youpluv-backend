@@ -16,8 +16,17 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use("Route");
 
-Route.get("/users", "UserController.all").middleware("auth");
+Route.get('/news' , "NewsController.index").middleware("auth");
+Route.get('/news/find/:query' , "NewsController.index").middleware("auth");
 
+
+Route.post('/news' , "NewsController.index").middleware(['auth:jwt', 'is:administrator']);
+Route.put('/news/:id' , "NewsController.index").middleware(['auth:jwt', 'is:administrator']);
+Route.delete('/news/:id' , "NewsController.index").middleware(['auth:jwt', 'is:administrator']);
+
+Route.post('/images' , "ImagesController.store").middleware(['auth:jwt', 'is:administrator']);
+
+Route.get("/users", "UserController.all").middleware("auth");
 Route.get("/weather", "WeatherController.getWeather");
 
 Route.post("/register", "AuthController.register");
