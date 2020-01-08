@@ -23,19 +23,7 @@ class NewsController {
     return await News.all()
   }
 
-  /**
-   * Render a form to be used for creating a new news.
-   * GET news/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
-    console.log('ok')
 
-  }
 
   /**
    * Create/save a new news.
@@ -60,20 +48,6 @@ class NewsController {
    * @param {View} ctx.view
    */
   async show ({ params, request, response, view }) {
-    console.log('ok')
-
-  }
-
-  /**
-   * Render a form to update an existing news.
-   * GET news/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
     console.log('ok')
 
   }
