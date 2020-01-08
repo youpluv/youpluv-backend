@@ -19,8 +19,11 @@ class RainfallController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
-    return await Rainfall.all()
+  async index({ request, response, view }) {
+
+    const rainfall = await Rainfall.all()
+    console.log(rainfall, "rainfall!!!!")
+    return rainfall
   }
 
   /**
@@ -32,9 +35,9 @@ class RainfallController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async store ({ request, response, auth }) {
+  async store({ request, response, auth }) {
 
-    const {initial_date, final_Date, latitude, longitude, rain_data} = request.body;
+    const { initial_date, final_Date, latitude, longitude, rain_data } = request.body;
     try {
       let rainfall = new Rainfall()
 
@@ -47,8 +50,8 @@ class RainfallController {
 
       await rainfall.save();
       return rainfall
-    }catch(e){
-      return response.json({error:`Error on save : ${e}`})
+    } catch (e) {
+      return response.json({ error: `Error on save : ${e}` })
     }
 
   }
@@ -61,7 +64,15 @@ class RainfallController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
+  async show({ params, request, response, view }) {
+
+    const { id } = params
+    try {
+      const rainfall = await Rainfall.find(id)
+    } catch (e) {
+      return response.json({ error: e })
+    }
+    return rainfall
   }
 
   /**
@@ -72,7 +83,25 @@ class RainfallController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
+  async update({ params, request, response }) {
+
+    const { initial_date, final_Date, latitude, longitude, rain_data } = request.body;
+    const { id } = params
+    try {
+      const rainfall = await Rainfall.find(id)
+      rainfall.user_id = auth.user.id
+      rainfall.initial_date = initial_date;
+      rainfall.final_Date = final_Date;
+      rainfall.latitude = latitude;
+      rainfall.longitude = longitude;
+      rainfall.rain_data = rain_data;
+      await rainfall.save();
+
+    } catch (e) {
+      return response.json({ error: `Error on save : ${e}` })
+    }
+
+    return rainfall
   }
 
   /**
@@ -83,7 +112,16 @@ class RainfallController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
+  async destroy({ params, request, response }) {
+
+    const { id } = params
+    try {
+      await Rainfall.destroy(id)
+    } catch (e) {
+      return response.json({ error: e })
+    }
+    return response.status(204)
+
   }
 }
 
