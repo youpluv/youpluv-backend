@@ -37,13 +37,13 @@ class RainfallController {
    */
   async store({ request, response, auth }) {
 
-    const { initial_date, final_Date, latitude, longitude, rain_data } = request.body;
+    const { initial_date, final_date, latitude, longitude, rain_data } = request.body;
     try {
       let rainfall = new Rainfall()
 
       rainfall.user_id = auth.user.id
       rainfall.initial_date = initial_date;
-      rainfall.final_Date = final_Date;
+      rainfall.final_date = final_date;
       rainfall.latitude = latitude;
       rainfall.longitude = longitude;
       rainfall.rain_data = rain_data;
@@ -83,15 +83,20 @@ class RainfallController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update({ params, request, response }) {
+  async update({ params, request, response, auth }) {
 
-    const { initial_date, final_Date, latitude, longitude, rain_data } = request.body;
+    const { initial_date, final_date, latitude, longitude, rain_data } = request.body;
     const { id } = params
+    let rainfall = {}
     try {
-      const rainfall = await Rainfall.find(id)
+      rainfall = await Rainfall.find(id)
+      console.log("ok")
+      if(!rainfall){
+        return response.status(404).json({error:"rainfall register not found"})
+      }
       rainfall.user_id = auth.user.id
       rainfall.initial_date = initial_date;
-      rainfall.final_Date = final_Date;
+      rainfall.final_date = final_date;
       rainfall.latitude = latitude;
       rainfall.longitude = longitude;
       rainfall.rain_data = rain_data;
@@ -116,9 +121,12 @@ class RainfallController {
 
     const { id } = params
     try {
-      await Rainfall.destroy(id)
+
+     const rainfall =  await Rainfall.find(id)
+     await rainfall.delete()
+
     } catch (e) {
-      return response.json({ error: e })
+      return response.status(400).json({ error: e })
     }
     return response.status(204)
 

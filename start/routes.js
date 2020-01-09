@@ -30,7 +30,7 @@ Route.post('/rainfall' , "RainfallController.store").middleware("auth");
 Route.put('/rainfall/:id' , "RainfallController.update").middleware("auth");
 Route.delete('/rainfall/:id' , "RainfallController.destroy").middleware("auth");//middleware(['auth:jwt', 'is:administrator']);
 
-Route.post('/images' , "ImagesController.store").middleware(['auth:jwt', 'is:administrator']);
+Route.post('/images' , "ImageController.store").middleware(['auth:jwt', 'is:administrator']);
 
 Route.get("/users", "UserController.all").middleware(['auth:jwt', 'is:administrator']);
 
