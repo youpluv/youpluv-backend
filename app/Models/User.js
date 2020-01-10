@@ -7,13 +7,13 @@ const Hash = use('Hash')
 
 class User extends Model {
 
-  static get traits () {
+  static get traits() {
     return [
       '@provider:Adonis/Acl/HasRole',
       '@provider:Adonis/Acl/HasPermission'
     ]
   }
-  static boot () {
+  static boot() {
     super.boot()
 
     /**
@@ -24,6 +24,16 @@ class User extends Model {
       if (userInstance.dirty.password) {
         userInstance.password = await Hash.make(userInstance.password)
       }
+    })
+
+    this.addHook('afterFetch', async (userInstance) => {
+      const promise = userInstance.forEach(async element => {
+        element.role = await element.getRoles()
+        console.log(element)
+      });
+      Promise.all(promise);
+
+      //userInstance.password = await Hash.make(userInstance.password)
     })
   }
 
@@ -37,8 +47,12 @@ class User extends Model {
    *
    * @return {Object}
    */
-  tokens () {
+  tokens() {
     return this.hasMany('App/Models/Token')
+  }
+
+  static get hidden() {
+    return ['password']
   }
 }
 

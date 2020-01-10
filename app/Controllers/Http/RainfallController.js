@@ -22,7 +22,6 @@ class RainfallController {
   async index({ request, response, view }) {
 
     const rainfall = await Rainfall.all()
-    console.log(rainfall, "rainfall!!!!")
     return rainfall
   }
 

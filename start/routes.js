@@ -49,3 +49,4 @@ Route.get("/acl" , ({request , result }) => {
 
 
 Route.put("/change-role" , "AuthController.changeRole").middleware(['auth:jwt', 'is:administrator'])
+Route.post("/send-email", "MessageController.SendEmail").middleware("auth");
