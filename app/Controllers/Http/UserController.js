@@ -1,11 +1,18 @@
 'use strict'
 
-const Database = use('Database')
-
+const User = use("App/Models/User")
 class UserController {
   async all() {
-    return await Database.select('*').from('users')
-  }
+
+    let userInstance = await User.all()
+
+    const promise = userInstance.forEach(async element => {
+      element.role = await element.getRoles()
+      console.log(element)
+    });
+    Promise.all(promise);
+
+return users  }
 }
 
 module.exports = UserController
