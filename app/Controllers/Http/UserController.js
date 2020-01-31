@@ -2,15 +2,9 @@
 
 const User = use("App/Models/User")
 class UserController {
-  async all() {
-
-    let userInstance = await User.all()
-
-    const promise = userInstance.forEach(async element => {
-      element.role = await element.getRoles()
-      console.log(element)
-    });
-    Promise.all(promise);
+  async all({request , response , auth}) {
+    response.header('content-range', 'user 1-10/200')
+    let users = await User.all()
 
 return users  }
 }

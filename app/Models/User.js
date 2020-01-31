@@ -25,16 +25,6 @@ class User extends Model {
         userInstance.password = await Hash.make(userInstance.password)
       }
     })
-
-    this.addHook('afterFetch', async (userInstance) => {
-      const promise = userInstance.forEach(async element => {
-        element.role = await element.getRoles()
-        console.log(element)
-      });
-      Promise.all(promise);
-
-      //userInstance.password = await Hash.make(userInstance.password)
-    })
   }
 
   /**

@@ -19,10 +19,20 @@ class RainfallController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index({ request, response, view }) {
+  async index({ request, response,auth }) {
 
-    const rainfall = await Rainfall.all()
-    return rainfall
+    const user_id = auth.user.id
+    let rainfalls = {}
+    let role = await auth.user.getRoles()
+
+    if(role.indexOf('administrator') >= 0){
+      console.log(role)
+      rainfalls = await Rainfall.all()
+    }else{
+      console.log(role)
+     rainfalls = await Rainfall.findBy('user_id' , user_id)
+    }
+    return rainfalls
   }
 
   /**
@@ -63,6 +73,7 @@ class RainfallController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
+
   async show({ params, request, response, view }) {
 
     const { id } = params

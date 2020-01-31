@@ -16,37 +16,34 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use("Route");
 
-Route.get('/news' , "NewsController.index").middleware("auth");
-Route.get('/news/:id' , "NewsController.show").middleware("auth");
-Route.get('/news/find/:query' , "NewsController.index").middleware("auth");
+Route.get('api/news', "NewsController.index").middleware("auth");
+Route.get('api/news/:id', "NewsController.show").middleware("auth");
+Route.get('api/news/find/:query', "NewsController.index").middleware("auth");
 
-Route.post('/news' , "NewsController.store").middleware(['auth:jwt', 'is:administrator']);
-Route.put('/news/:id' , "NewsController.update").middleware(['auth:jwt', 'is:administrator']);
-Route.delete('/news/:id' , "NewsController.destroy").middleware(['auth:jwt', 'is:administrator']);
+Route.post('api/news', "NewsController.store").middleware(['auth:jwt', 'is:administrator']);
+Route.put('api/news/:id', "NewsController.update").middleware(['auth:jwt', 'is:administrator']);
+Route.delete('api/news/:id', "NewsController.destroy").middleware(['auth:jwt', 'is:administrator']);
 
-Route.get('/rainfall' , "RainfallController.index").middleware("auth");
-Route.get('/rainfall/:id' , "RainfallController.show").middleware("auth");
-Route.post('/rainfall' , "RainfallController.store").middleware("auth");
-Route.put('/rainfall/:id' , "RainfallController.update").middleware("auth");
-Route.delete('/rainfall/:id' , "RainfallController.destroy").middleware("auth");//middleware(['auth:jwt', 'is:administrator']);
+Route.get('api/rainfall', "RainfallController.index").middleware("auth");
+Route.get('api/rainfall/:id', "RainfallController.show").middleware("auth");
+Route.post('api/rainfall', "RainfallController.store").middleware("auth");
+Route.put('api/rainfall/:id', "RainfallController.update").middleware("auth");
+Route.delete('api/rainfall/:id', "RainfallController.destroy").middleware("auth");//middleware(['auth:jwt', 'is:administrator']);
 
-Route.post('/images' , "ImageController.store").middleware(['auth:jwt', 'is:administrator']);
+Route.post('api/images', "ImageController.store").middleware(['auth:jwt', 'is:administrator']);
+Route.get("api/user", "UserController.all").middleware('auth');
 
-Route.get("/users", "UserController.all").middleware(['auth:jwt', 'is:administrator']);
+Route.get("api/weather", "WeatherController.getWeather");
 
-Route.get("/weather", "WeatherController.getWeather");
+Route.post("api/forgot-password", "AuthController.forgotPassword");
+Route.post("api/register", "AuthController.register");
+Route.post("api/register-admin", "AuthController.registerAdmin");
 
-Route.post("/register", "AuthController.register");
-Route.post("/register-admin", "AuthController.registerAdmin");
-
-Route.post("/login", "AuthController.login");
-Route.post("/social-login", "AuthController.socialLogin");
-
-Route.get("/acl" , ({request , result }) => {
-  console.log('Eu sou usuario admin')
-  return "ok"
-} ).middleware(['auth:jwt', 'is:administrator'])
+Route.post("api/login", "AuthController.login");
+Route.post("api/social-login", "AuthController.socialLogin");
 
 
-Route.put("/change-role" , "AuthController.changeRole").middleware(['auth:jwt', 'is:administrator'])
-Route.post("/send-email", "MessageController.SendEmail").middleware("auth");
+Route.put("api/change-role", "AuthController.changeRole").middleware(['auth:jwt', 'is:administrator'])
+Route.post("api/send-email", "MessageController.SendEmail").middleware("auth");
+Route.get("/", ({request,response}) => { response.json({message:"Youpluv API v1.0"}) })
+Route.get("api/", ({request,response}) => { response.json({message:"Youpluv API v1.0"}) })
