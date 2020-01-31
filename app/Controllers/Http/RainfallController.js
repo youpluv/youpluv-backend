@@ -19,18 +19,18 @@ class RainfallController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index({ request, response,auth }) {
+  async index({ request, response, auth }) {
 
     const user_id = auth.user.id
     let rainfalls = {}
     let role = await auth.user.getRoles()
 
-    if(role.indexOf('administrator') >= 0){
+    if (role.indexOf('administrator') >= 0) {
       console.log(role)
       rainfalls = await Rainfall.all()
-    }else{
+    } else {
       console.log(role)
-     rainfalls = await Rainfall.findBy('user_id' , user_id)
+      rainfalls = await Rainfall.findBy('user_id', user_id)
     }
     return rainfalls
   }
@@ -101,8 +101,8 @@ class RainfallController {
     try {
       rainfall = await Rainfall.find(id)
       console.log("ok")
-      if(!rainfall){
-        return response.status(404).json({error:"rainfall register not found"})
+      if (!rainfall) {
+        return response.status(404).json({ error: "rainfall register not found" })
       }
       rainfall.user_id = auth.user.id
       rainfall.initial_date = initial_date;
@@ -132,8 +132,8 @@ class RainfallController {
     const { id } = params
     try {
 
-     const rainfall =  await Rainfall.find(id)
-     await rainfall.delete()
+      const rainfall = await Rainfall.find(id)
+      await rainfall.delete()
 
     } catch (e) {
       return response.status(400).json({ error: e })
