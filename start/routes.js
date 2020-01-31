@@ -53,5 +53,5 @@ Route.get("/acl", ({ request, result }) => {
 }).middleware(["auth:jwt", "is:administrator"]);
 
 // Route.put("/change-role" , "AuthController.changeRole").middleware(['auth:jwt', 'is:administrator'])
-Route.put("/change-role", "AuthController.changeRole").middleware(["auth:jwt"]);
-Route.post("/send-email", "MessageController.SendEmail").middleware("auth");
+Route.put("api/change-role", "AuthController.changeRole").middleware(["auth:jwt"]);
+Route.post("api/send-email", "MessageController.SendEmail").middleware("auth");
