@@ -30,7 +30,9 @@ class RainfallController {
       rainfalls = await Rainfall.all()
     } else {
       console.log(role)
-      rainfalls = await Rainfall.findBy('user_id', user_id)
+      rainfalls = await Rainfall.query()
+        .where('user_id', '=', user_id)
+        .fetch()
     }
     return rainfalls
   }
