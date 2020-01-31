@@ -42,8 +42,16 @@ Route.post("api/register-admin", "AuthController.registerAdmin");
 Route.post("api/login", "AuthController.login");
 Route.post("api/social-login", "AuthController.socialLogin");
 
-
 Route.put("api/change-role", "AuthController.changeRole").middleware(['auth:jwt', 'is:administrator'])
 Route.post("api/send-email", "MessageController.SendEmail").middleware("auth");
 Route.get("/", ({request,response}) => { response.json({message:"Youpluv API v1.0"}) })
 Route.get("api/", ({request,response}) => { response.json({message:"Youpluv API v1.0"}) })
+
+Route.get("/acl", ({ request, result }) => {
+  console.log("Eu sou usuario admin");
+  return "ok";
+}).middleware(["auth:jwt", "is:administrator"]);
+
+// Route.put("/change-role" , "AuthController.changeRole").middleware(['auth:jwt', 'is:administrator'])
+Route.put("/change-role", "AuthController.changeRole").middleware(["auth:jwt"]);
+Route.post("/send-email", "MessageController.SendEmail").middleware("auth");
