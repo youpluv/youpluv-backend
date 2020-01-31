@@ -31,7 +31,7 @@ Route.put('api/rainfall/:id', "RainfallController.update").middleware("auth");
 Route.delete('api/rainfall/:id', "RainfallController.destroy").middleware("auth");//middleware(['auth:jwt', 'is:administrator']);
 
 Route.post('api/images', "ImageController.store").middleware(['auth:jwt', 'is:administrator']);
-Route.get("api/user", "UserController.all").middleware('auth');
+Route.get("api/users", "UserController.all").middleware('auth');
 
 Route.get("api/weather", "WeatherController.getWeather");
 
