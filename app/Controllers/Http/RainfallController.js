@@ -138,9 +138,9 @@ class RainfallController {
       await rainfall.delete()
 
     } catch (e) {
-      return response.status(400).json({ error: e })
+      return response.status(400).json({message:"error"})
     }
-    return response.status(204)
+    return response.status(202).json({message:"deleted"})
 
   }
 }
