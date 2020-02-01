@@ -42,6 +42,13 @@ class ImageController {
     }
     return imagePersist
   }
+
+  async index({request , response}){
+
+    const images  = await Image.all()
+    return images
+
+  }
 }
 
 module.exports = ImageController
