@@ -79,8 +79,9 @@ class RainfallController {
   async show({ params, request, response, view }) {
 
     const { id } = params
+    let rainfall = {}
     try {
-      const rainfall = await Rainfall.find(id)
+       rainfall = await Rainfall.find(id)
     } catch (e) {
       return response.json({ error: e })
     }
