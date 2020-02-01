@@ -3,7 +3,7 @@ const Helpers = use('Helpers')
 const Image = use('App/Models/Image')
 const Env = use('Env')
 const appUrl = Env.get("APP_URL_FOR_FILES" , "https://youpluv.herokuapp.com")
-const appStatic = Env.get("APP_STATIC")
+const appStatic = Env.get("APP_STATIC" , "/files/")
 
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
