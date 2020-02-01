@@ -10,29 +10,10 @@ const News = use("App/Models/News");
  * Resourceful controller for interacting with news
  */
 class NewsController {
-  /**
-   * Show a list of all news.
-   * GET news
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
+
   async index({ request, response, view }) {
     return await News.all()
   }
-
-
-
-  /**
-   * Create/save a new news.
-   * POST news
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
   async store({ request, response }) {
 
     const { image, title, subtitle, description, date, source } = request.body
@@ -55,15 +36,7 @@ class NewsController {
     return news
   }
 
-  /**
-   * Display a single news.
-   * GET news/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
+
   async show({ params, request, response, view }) {
 
     const { id } = request.params
@@ -81,14 +54,7 @@ class NewsController {
 
   }
 
-  /**
-   * Update news details.
-   * PUT or PATCH news/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
+
   async update({ params, request, response }) {
     const { image, title, subtitle, description, date, source } = request.body
     const { id } = request.params
@@ -113,25 +79,17 @@ class NewsController {
 
   }
 
-  /**
-   * Delete a news with id.
-   * DELETE news/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
   async destroy({ params, request, response }) {
     const { id } = request.params
     let news = {}
-    try {
-      news = await News.find(id)
+    news = await News.find(id)
+    if (!news || news == null || news == "") {
+      console.log("vazio")
+      return response.status(404).json({message:"error"})
+    } else {
       await news.delete()
-
-    } catch (e) {
-      return response.status(400).json({ error: e })
     }
-    return response.status(204)
+    return response.status(202).json({message:"deleted"})
 
   }
 }
