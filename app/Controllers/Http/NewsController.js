@@ -1,5 +1,7 @@
 'use strict'
 const News = use("App/Models/News");
+const Push = use("App/Services/Push")
+const User = use("App/Models/User")
 
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
@@ -18,6 +20,7 @@ class NewsController {
 
     const { image, title, subtitle, description, date, source } = request.body
     let news = new News()
+    let tokens = []
     try {
 
 
@@ -29,10 +32,12 @@ class NewsController {
       news.image = image
 
       await news.save()
+
     } catch (e) {
       return response.status(400).json({ error: e })
     }
 
+    await Push.send('news' , news)
     return news
   }
 
@@ -85,11 +90,11 @@ class NewsController {
     news = await News.find(id)
     if (!news || news == null || news == "") {
       console.log("vazio")
-      return response.status(404).json({message:"error"})
+      return response.status(404).json({ message: "error" })
     } else {
       await news.delete()
     }
-    return response.status(202).json({message:"deleted"})
+    return response.status(202).json({ message: "deleted" })
 
   }
 }

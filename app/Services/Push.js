@@ -1,50 +1,73 @@
-import { Expo } from 'expo-server-sdk';
+const { Expo } = require('expo-server-sdk')
+const User = use("App/Models/User")
 
-// Create a new Expo SDK client
 let expo = new Expo();
 
 class Push {
 
-  async send(message, tokens) {
-    /**
-     * message = {message.body , message.data}
-     * array of tokens...
-     */
-    // Create the pushes that you want to send to clents
+  async send(type, data) {
+
+    const message = await this.createMessage(type, data)
+    const tokens = await this.getTokens()
     let pushes = [];
     for (let pushToken of tokens) {
-      if (!Expo.isExpoPushToken(pushToken)) {
-        console.error(`Push token ${pushToken} is not a valid Expo push token`);
-        continue;
-      }
-      // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
+
       pushes.push({
         to: pushToken,
         sound: 'default',
         body: message.body,
         data: message.data,
       })
+      console.log(pushes)
     }
     let chunks = expo.chunkPushNotifications(pushes);
     let tickets = [];
-    (async () => {
-      // Send the chunks to the Expo push notification service. There are
-      // different strategies you could use. A simple one is to send one chunk at a
-      // time, which nicely spreads the load out over time:
-      for (let chunk of chunks) {
-        try {
-          let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-          console.log(ticketChunk);
-          tickets.push(...ticketChunk);
-          // NOTE: If a ticket contains an error code in ticket.details.error, you
-          // must handle it appropriately. The error codes are listed in the Expo
-          // documentation:
-          // https://docs.expo.io/versions/latest/guides/push-notifications#response-format
-        } catch (error) {
-          console.error(error);
+    await this.sendPushes(chunks)
+    return true
+  }
+
+  async sendPushes(chunks) {
+    let tickets = [];
+    for (let chunk of chunks) {
+      try {
+        let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+        console.log(ticketChunk);
+        tickets.push(...ticketChunk);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
+  async getTokens() {
+    let tokens = [];
+    const users = await User.all()
+    for (const userIt in users.rows) {
+      let user = users.rows[userIt]
+      console.log('token -> ', user.email, user.device_token_id)
+      if (user.device_token_id !== "" && user.device_token_id !== null && user.device_token_id !== 'undefined') {
+        if (Expo.isExpoPushToken(user.device_token_id)) {
+          tokens.push(user.device_token_id)
+        } else {
+          console.log(`Push token ${user.device_token_id} is not a valid Expo push token`);
         }
       }
-    })()
+    }
+    return tokens
+  }
+
+  async createMessage(type, data) {
+    let pushContent = {}
+    console.log('data : ' , data)
+    if (type == 'news') {
+      pushContent = { body: data.title, data: { type: type, id: data.id } }
+    }
+
+    if (type = 'message'){
+      pushContent = { body: data.title, data: { type: type, id: data.id } }
+    }
+    console.log('push content -> ' , pushContent)
+    return pushContent
+
   }
 };
 module.exports = new Push()

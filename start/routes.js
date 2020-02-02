@@ -46,6 +46,8 @@ Route.post("api/social-login", "AuthController.socialLogin");
 
 Route.put("api/change-role", "AuthController.changeRole").middleware(['auth:jwt', 'is:administrator'])
 Route.post("api/send-email", "MessageController.SendEmail").middleware("auth");
+Route.post("api/send-push", "MessageController.SendPush").middleware("auth");
+
 Route.get("/", ({request,response}) => { response.json({message:"Youpluv API v1.0"}) })
 Route.get("api/", ({request,response}) => { response.json({message:"Youpluv API v1.0"}) })
 
