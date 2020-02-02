@@ -81,7 +81,7 @@ class RainfallController {
     const { id } = params
     let rainfall = {}
     try {
-       rainfall = await Rainfall.find(id)
+      rainfall = await Rainfall.find(id)
     } catch (e) {
       return response.json({ error: e })
     }
@@ -139,9 +139,9 @@ class RainfallController {
       await rainfall.delete()
 
     } catch (e) {
-      return response.status(400).json({message:"error"})
+      return response.status(400).json({ message: "error" })
     }
-    return response.status(202).json({message:"deleted"})
+    return response.status(202).json({ message: "deleted" })
 
   }
 }

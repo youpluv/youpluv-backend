@@ -9,10 +9,10 @@ class AuthController {
   async register({ request, auth }) {
     const roleMobile = await Role.find(2);
 
-    const data = request.only(["email", "password", "username"]);
-    const { email, password } = data;
+    const data = request.only(["email", "password", "username" , "device_token"]);
+    const { email, password , device_token: device_token_id } = data;
 
-    const user = await User.create(data);
+    const user = await User.create({ email, password , device_token_id });
     await user.roles().attach([roleMobile.id]);
 
     const jwt = await auth.attempt(email, password);
@@ -24,7 +24,7 @@ class AuthController {
 
   async login({ request, auth }) {
     console.log('Chegou aqui na req!!')
-    const { email, password } = request.body;
+    const { email, password  } = request.body;
     const jwt = await auth.attempt(email, password);
     const user = await User.query()
       .where("email", email)
