@@ -9,10 +9,10 @@ class AuthController {
   async register({ request, auth }) {
     const roleMobile = await Role.find(2);
 
-    const data = request.only(["email", "password", "username" , "device_token"]);
-    const { email, password , device_token: device_token_id } = data;
+    const data = request.only(["email", "password", "username", "device_token"]);
+    const { email, password, device_token: device_token_id } = data;
 
-    const user = await User.create({ email, password , device_token_id });
+    const user = await User.create({ email, password, device_token_id });
     await user.roles().attach([roleMobile.id]);
 
     const jwt = await auth.attempt(email, password);
@@ -24,7 +24,7 @@ class AuthController {
 
   async login({ request, auth }) {
     console.log('Chegou aqui na req!!')
-    const { email, password  } = request.body;
+    const { email, password } = request.body;
     const jwt = await auth.attempt(email, password);
     const user = await User.query()
       .where("email", email)
@@ -35,7 +35,7 @@ class AuthController {
 
   async socialLogin({ request, auth }) {
     const data = request.only(["email", "password", "username", "picture"]);
-    const { email, password } = data;
+    const { email, password, device_token: device_token_id } = data;
     try {
       const jwt = await auth.attempt(email, password);
       const user = await User.query()
@@ -44,7 +44,7 @@ class AuthController {
       user.token = jwt.token;
       return user;
     } catch (error) {
-      const user = await User.create(data);
+      const user = await User.create({ email, password, device_token_id });
       const jwt = await auth.attempt(email, password);
       user.token = jwt.token;
       return user;
@@ -52,19 +52,19 @@ class AuthController {
   }
 
 
-  async forgotPassword({ request, auth,response }) {
+  async forgotPassword({ request, auth, response }) {
     const { email } = request.body
-      let user = await User.findBy('email', email)
-      if (!user) {
-        response.status(404).json({ error: "Not found" })
-      } else {
-        const newPassword = Math.floor(Math.random() * 1000 + 1000)
-        user.password = newPassword.toString()
-        await user.save()
-        console.log('password',user.password)
-        const status = await EmailService.Send("Recuperação de senha", email, "password", {password:newPassword , email})
-        return status
-      }
+    let user = await User.findBy('email', email)
+    if (!user) {
+      response.status(404).json({ error: "Not found" })
+    } else {
+      const newPassword = Math.floor(Math.random() * 1000 + 1000)
+      user.password = newPassword.toString()
+      await user.save()
+      console.log('password', user.password)
+      const status = await EmailService.Send("Recuperação de senha", email, "password", { password: newPassword, email })
+      return status
+    }
 
   }
 
