@@ -14,6 +14,7 @@ const User = use("App/Models/User")
 class NewsController {
 
   async index({ request, response, view }) {
+    console.log('index news!')
     return await News.all()
   }
   async store({ request, response }) {
